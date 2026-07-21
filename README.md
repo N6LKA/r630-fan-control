@@ -1,6 +1,6 @@
 # r630-fan-control
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-1.0.1-blue)
 
 Dynamic fan speed control for LCARS-01, a Dell R630 running Proxmox. Works around iDRAC pinning fans at an elevated baseline speed when it can't get thermal telemetry from a non-Dell NVMe adapter, while still protecting against overheating if load actually increases.
 
@@ -19,15 +19,35 @@ Dynamic fan speed control for LCARS-01, a Dell R630 running Proxmox. Works aroun
 
 ## Requirements
 
-- `ipmitool` installed, with local IPMI access working (`ipmitool sdr type fan` should return sensor data)
+- `git` and `ipmitool` installed, with local IPMI access working (`ipmitool sdr type fan` should return sensor data)
 - Python 3
+
+On a bare Proxmox host, `git` usually isn't installed yet:
+
+```bash
+apt update && apt install -y git
+```
 
 ## Manual install
 
-Clone the repo onto the host (SSH shown; substitute an HTTPS + token clone if SSH isn't set up for GitHub on this host):
+Clone the repo onto the host. This is a private repo, so plain `git clone` over HTTPS won't work without credentials — use whichever of these two applies:
+
+**Option A — SSH** (if this host already has an SSH key registered with your GitHub account):
 
 ```bash
 git clone git@github.com:N6LKA/r630-fan-control.git /opt/r630-fan-control
+```
+
+**Option B — HTTPS + token** (if not — generate a token from GitHub's UI directly, e.g. a fine-grained PAT scoped to just this repo, then paste it into the command below in place of `<TOKEN>`):
+
+```bash
+git clone https://N6LKA:<TOKEN>@github.com/N6LKA/r630-fan-control.git /opt/r630-fan-control
+```
+
+After cloning with Option B, strip the token back out of the saved remote config so it isn't left sitting in `.git/config`:
+
+```bash
+git -C /opt/r630-fan-control remote set-url origin https://github.com/N6LKA/r630-fan-control.git
 ```
 
 Install the script and service:
