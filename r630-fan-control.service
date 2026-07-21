@@ -1,0 +1,15 @@
+[Unit]
+Description=Dell R630 (LCARS-01) dynamic fan speed control
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/r630-fan-control.py
+Restart=on-failure
+RestartSec=10
+# Belt-and-suspenders: if the process is killed outright (SIGKILL) and never
+# reaches its own cleanup, this guarantees fans aren't left stuck on manual.
+ExecStopPost=/usr/sbin/ipmitool raw 0x30 0x30 0x01 0x01
+
+[Install]
+WantedBy=multi-user.target
