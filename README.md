@@ -1,6 +1,6 @@
 # r630-fan-control
 
-![Version](https://img.shields.io/badge/version-1.0.2-blue)
+![Version](https://img.shields.io/badge/version-1.0.3-blue)
 
 Dynamic fan speed control for LCARS-01, a Dell R630 running Proxmox. Works around iDRAC pinning fans at an elevated baseline speed when it can't get thermal telemetry from a non-Dell NVMe adapter, while still protecting against overheating if load actually increases.
 
@@ -52,6 +52,21 @@ systemctl enable --now r630-fan-control.service
 ```bash
 systemctl status r630-fan-control.service
 journalctl -u r630-fan-control.service -f
+```
+
+## Checking fan speeds and temps
+
+Useful for a manual spot-check any time, independent of the service:
+
+```bash
+ipmitool sdr type fan
+ipmitool sdr type temperature
+```
+
+To track a trend over several checks, prefix with a timestamp:
+
+```bash
+date; ipmitool sdr type fan; ipmitool sdr type temperature
 ```
 
 ## Disable and revert fans to automatic
